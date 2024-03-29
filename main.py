@@ -1,21 +1,21 @@
+from enum import Enum
+
 from product import product
 from user.authentication import Authentication
 from user.user import User
 
 
+class MenuOption(Enum):
+    CADASTRAR_SE = 1
+    AUTENTICAR_SE = 2
+    SAIR = 3
+    ADICIONAR_NOVO_PRODUTO = 4
+    LISTAR_PRODUTOS_EXISTENTES = 5
+
+
 class Menu:
     def __init__(self):
         self.authenticated = False  # Variável para controlar se o usuário está autenticado
-        self.options_before_loggedIn = {
-            "Cadastrar-se": 1,
-            "Autenticar-se": 2,
-            "Sair": 3,
-        }
-        self.options_after_loggedIn = {
-            "Sair": 3,
-            "Adicionar novo produto": 4,
-            "Listar produtos existentes": 5
-        }
 
     def display(self):
         if not self.authenticated:  # Verifica se o usuário não está autenticado
@@ -29,11 +29,11 @@ class Menu:
 
     def handle_option(self, option):
         if not self.authenticated:
-            if option == self.options_before_loggedIn["Cadastrar-se"]:
+            if option == MenuOption.CADASTRAR_SE.value:
                 name, phone_number, email, password = User.get_signup_data()
                 User.save(name, phone_number, email, password)
 
-            elif option == self.options_before_loggedIn["Autenticar-se"]:
+            elif option == MenuOption.AUTENTICAR_SE.value:
                 email, password = Authentication.get_data()
                 authenticated = Authentication.authenticate_user(email, password)
                 if authenticated:
@@ -41,15 +41,15 @@ class Menu:
                     print("---------- Autenticação bem-sucedida! ----------")
                     print("\n---------- Tela de início do sistema ---------- \n")
 
-            elif option == self.options_before_loggedIn["Sair"]:
+            elif option == MenuOption.SAIR.value:
                 print("Agradecemos por usar o nosso sistema.")
                 return False
 
         else:  # Se o usuário estiver autenticado
-            if option == self.options_after_loggedIn["Adicionar novo produto"]:
+            if option == MenuOption.ADICIONAR_NOVO_PRODUTO.value:
                 name, preco = product.Product.get_data()
                 product.Product.add_to_inventory(name=name, preco=preco)
-            elif option == self.options_after_loggedIn["Listar produtos existentes"]:
+            elif option == MenuOption.LISTAR_PRODUTOS_EXISTENTES.value:
                 print(f'Os produtos existentes são: {product.Product.get_list()}\n')
             elif option == 0:  # Opção 0 para sair
                 print("Agradecemos por usar o nosso sistema.")
