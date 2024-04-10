@@ -2,38 +2,27 @@ from user.user import User
 
 
 class Authentication:
+    def __init__(self):
+        pass
+
     @staticmethod
     def authenticate_user(email, password):
-        users = User.get_list()
-        for user in users:
-            if user['email'] == email and user['password'] == password:
+        user_list = User.get_list()
+        for user in user_list:
+            if user.get('email') == email and user.get('password') == password:
                 return True
-
         return False
 
-    @staticmethod
-    def get_user_signin_info():
+    def get_user_signin_info(self):
         print("---------- Realizando Autenticação ----------")
         email = input("Digite seu email: ")
         password = input("Digite sua senha: ")
 
-        is_valid: bool = Authentication.validate_user_signin_info(email, password)
-
-        if is_valid:
-            return email, password
-
-    @staticmethod
-    def validate_user_signin_info(email: str, password: str) -> bool:
-
-        if Authentication.is_empty_signin_data(email, password):
+        if self.is_empty_signin_data(email, password):
             print(f'\n---------------- Não podem conter campos em branco ----------------\n')
-            Authentication.get_user_signin_info()
-        else:
-            return True  # A entrada não está em branco
+            return None
 
+        return email, password
 
-
-    @staticmethod
-    def is_empty_signin_data(email: str, password: str) -> bool:
-        return (email.strip() == "" or
-                password.strip() == "")
+    def is_empty_signin_data(self, email: str, password: str) -> bool:
+        return email.strip() == "" or password.strip() == ""

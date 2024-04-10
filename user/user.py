@@ -1,16 +1,10 @@
-
-
 class User:
-    users = []  # Lista para armazenar os usuários
+    __user_list = []  # Lista para armazenar os usuários
 
-    def __init__(self, name, phone_number, email, password):
-        self.name = name
-        self.phone_number = phone_number
-        self.email = email
-        self.password = password
+    def __init__(self):
+        pass
 
-    @staticmethod
-    def get_user_signup_info():
+    def get_user_signup_info(self):
         # Solicita os dados de cadastro ao usuário
         print("---------- Realizando Cadastro ----------")
         name: str = input("Digite seu nome: ")
@@ -18,19 +12,18 @@ class User:
         email: str = input("Digite seu email: ")
         password: str = input("Digite sua senha: ")
 
-        is_valid: bool = User.validate_user_signup_info(name, phone_number, email, password)
+        is_valid: bool = self.validate_user_signup_info(name, phone_number, email, password)
 
         if is_valid:
             return name, phone_number, email, password
         else:
             return None
 
-    @staticmethod
-    def validate_user_signup_info(name: str, phone_number: str, email: str, password: str) -> bool:
+    def validate_user_signup_info(self, name: str, phone_number: str, email: str, password: str) -> bool:
 
-        if User.is_empty(name, phone_number, email, password):
+        if self.is_empty(name, phone_number, email, password):
             print(f'\nNão podem conter campos em branco')
-            User.get_user_signup_info()
+            self.get_user_signup_info()
         else:
             return True  # A entrada não está em branco
 
@@ -42,15 +35,14 @@ class User:
             "email": email,
             "password": password
         }
-        User.users.append(user)
+        User.__user_list.append(user)
         print("--------------- Cadastro realizado com sucesso. ---------------\n")
 
     @staticmethod
     def get_list():
-        return User.users
+        return User.__user_list
 
-    @staticmethod
-    def is_empty(name: str, phone_number: str, email: str, password: str) -> bool:
+    def is_empty(self, name: str, phone_number: str, email: str, password: str) -> bool:
         return (name.strip() == "" or
                 phone_number.strip() == "" or
                 email.strip() == "" or
