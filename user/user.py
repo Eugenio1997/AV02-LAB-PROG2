@@ -1,3 +1,5 @@
+
+
 class User:
     users = []  # Lista para armazenar os usuários
 
@@ -8,18 +10,32 @@ class User:
         self.password = password
 
     @staticmethod
-    def get_signup_data():
+    def get_user_signup_info():
         # Solicita os dados de cadastro ao usuário
         print("---------- Realizando Cadastro ----------")
-        name = input("Digite seu nome: ")
-        phone_number = input("Digite seu número de telefone: ")
-        email = input("Digite seu email: ")
-        password = input("Digite sua senha: ")
+        name: str = input("Digite seu nome: ")
+        phone_number: str = input("Digite seu número de telefone: ")
+        email: str = input("Digite seu email: ")
+        password: str = input("Digite sua senha: ")
 
-        return name, phone_number, email, password
+        is_valid: bool = User.validate_user_signup_info(name, phone_number, email, password)
+
+        if is_valid:
+            return name, phone_number, email, password
+        else:
+            return None
 
     @staticmethod
-    def save(name, phone_number, email, password):
+    def validate_user_signup_info(name: str, phone_number: str, email: str, password: str) -> bool:
+
+        if User.is_empty(name, phone_number, email, password):
+            print(f'\nNão podem conter campos em branco')
+            User.get_user_signup_info()
+        else:
+            return True  # A entrada não está em branco
+
+    @staticmethod
+    def save(name, phone_number, email, password) -> None:
         user = {
             "name": name,
             "phone_number": phone_number,
@@ -32,3 +48,10 @@ class User:
     @staticmethod
     def get_list():
         return User.users
+
+    @staticmethod
+    def is_empty(name: str, phone_number: str, email: str, password: str) -> bool:
+        return (name.strip() == "" or
+                phone_number.strip() == "" or
+                email.strip() == "" or
+                password.strip() == "")
