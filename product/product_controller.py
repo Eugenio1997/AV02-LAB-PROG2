@@ -1,22 +1,47 @@
 from validations.product_validations.create_product_validation import ProductValidations
 from product.requirements.product_signup_requirements import ProductSignupRequirements
 
+
 class ProductController:
-    __product_list = [] # Lista para armazenar os produtos
+    """
+    Classe responsável por controlar a gestão de produtos no sistema.
+
+    Attributes:
+        __product_list (list): Lista para armazenar os produtos cadastrados.
+    """
+
+    __product_list = []  # Lista para armazenar os produtos
 
     def __init__(self):
+        """
+        Inicializa o ProductController com um gerenciador de validações de produto.
+        """
         self.product_validations_manager = ProductValidations()
 
     @classmethod
     def add_to_inventory(cls, product_dict) -> None:
+        """
+        Adiciona um produto ao inventário.
+
+        Args:
+            product_dict (dict): Dicionário contendo as informações do produto, com as chaves 'name' e 'price'.
+
+        Raises:
+            ValueError: Se o dicionário fornecido não contém as chaves 'name' e 'price'.
+        """
         if isinstance(product_dict, dict) and "name" in product_dict and "price" in product_dict:
-            cls.__product_list.append(dict(name=product_dict["name"], price=product_dict["price"]))
+            cls.__product_list.append({"name": product_dict["name"], "price": product_dict["price"]})
             print("--------------- Cadastro realizado com sucesso. ---------------\n")
         else:
             raise ValueError("O dicionário fornecido não contém as chaves 'name' e 'price'.")
 
-    def get_product_signup_info(self) -> [str, str]:
+    def get_product_signup_info(self) -> tuple[str, str]:
+        """
+        Solicita e valida as informações de cadastro de um produto.
 
+        Returns:
+            tuple[str, str]: Uma tupla contendo o nome e o preço do produto validados.
+        """
         print("---------- Realizando Cadastro de Produto ----------")
 
         name: str = input(f'{ProductSignupRequirements.name_requirements}\nDigite o nome: ')
@@ -24,24 +49,36 @@ class ProductController:
 
         name, price = self.__remove_whitespaces(name, price)
 
-        name_valided: str = self.product_validations_manager.validate_name(name)
-        price_valided: str = self.product_validations_manager.validate_price(price)
+        name_validated: str = self.product_validations_manager.validate_name(name)
+        price_validated: str = self.product_validations_manager.validate_price(price)
 
-        while not [name_valided, price_valided]:
+        while not (name_validated and price_validated):
             print("\n---------------- Os campos são obrigatórios ----------------\n")
-            name_valided, price_valided = self.get_product_signup_info()
+            name, price = self.get_product_signup_info()
+            name_validated = self.product_validations_manager.validate_name(name)
+            price_validated = self.product_validations_manager.validate_price(price)
 
-        # return validated_product_data
-        return name_valided, price_valided
+        return name_validated, price_validated
 
     @classmethod
     def get_product_list(cls) -> list[dict[str, float]]:
+        """
+        Retorna a lista de produtos cadastrados.
+
+        Returns:
+            list[dict[str, float]]: Lista de produtos cadastrados.
+        """
         return cls.__product_list
 
-    def __remove_whitespaces(self, name: str, price: str) -> tuple[
-        str, str]:
+    def __remove_whitespaces(self, name: str, price: str) -> tuple[str, str]:
+        """
+        Remove espaços em branco de uma string.
 
-        name = name.replace(" ", "")
-        price = price.replace(" ", "")
+        Args:
+            name (str): O nome a ser processado.
+            price (str): O preço a ser processado.
 
-        return name, price
+        Returns:
+            tuple[str, str]: Uma tupla contendo o nome e o preço sem espaços em branco.
+        """
+        return name.replace(" ", ""), price.replace(" ", "")
