@@ -32,12 +32,12 @@ class UserController:
         email_validated: str = self.user_validations_manager.validate_email(email)
         password_validated: str = self.user_validations_manager.validate_password(password)
 
-        while not [name_validated, phone_number_validated, email_validated, password_validated]:
+        while not [name_validated, email_validated, phone_number_validated, password_validated]:
             print("\n---------------- Os campos são obrigatórios ----------------\n")
-            name_validated, phone_number_validated, email_validated, password_validated = self.get_user_signup_info()
+            name_validated, email_validated, phone_number_validated, password_validated = self.get_user_signup_info()
 
         # return validated_user_data
-        return name_validated, phone_number_validated, email_validated, password_validated
+        return name_validated, email_validated, phone_number_validated, password_validated
 
     @classmethod
     def save(cls, user_dict: dict[str, str]) -> None:
