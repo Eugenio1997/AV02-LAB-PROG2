@@ -37,7 +37,7 @@ class ProductValidations:
                 input_value_copy = input_value_copy.replace('.', '').replace(',', '')
 
                 if input_value_copy.isdigit():
-                    input_value_float = self.convert_to_float(input_value)
+                    input_value_float = self.convert_to_float(input_value.replace(',', ''))
                     return input_value_float
 
                 return input_value
