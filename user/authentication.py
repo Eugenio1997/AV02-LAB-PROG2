@@ -1,19 +1,18 @@
-from user.user import User
+from user.user_controller import UserController
 
 
 class Authentication:
     def __init__(self):
-        pass
+        self.user_manager = UserController()
 
-    @staticmethod
-    def authenticate_user(email, password):
-        user_list = User.get_list()
+    def authenticate_user(self, email, password):
+        user_list = self.user_manager.get_user_list()
         for user in user_list:
             if user.get('email') == email and user.get('password') == password:
                 return True
         return False
 
-    def get_user_signin_info(self):
+    def get_user_signin_info(self) -> tuple[str, str] | None:
         print("---------- Realizando Autenticação ----------")
         email = input("Digite seu email: ")
         password = input("Digite sua senha: ")
