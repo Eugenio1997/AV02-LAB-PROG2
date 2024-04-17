@@ -2,7 +2,7 @@
 # Contato: eugeniolopesfernandeslima1997@outlook.com
 # Descrição: Sistema de gerenciamento de produtos
 
-from enums import menu_options
+from enums.menu_options import Options
 from models.user import User
 from user.user_controller import UserController
 from user.authentication import Authentication
@@ -18,19 +18,22 @@ class Menu:
         self.auth_manager = Authentication()
 
     def display(self):
+        product_list = self.product_manager.get_product_list()
         if not self.authenticated:
             print("O que deseja?\n")
             print("Cadastrar-se (1)\nAutenticar-se (2)\nSair (3)\n")
         else:
             print(f'Bem-vindo! Você está autenticado.')
             print("Deseja adicionar um novo produto? (4)")
-            print("Deseja listar todos os produtos existentes? (5)")
+            print("Deseja listar todos os produtos? (5)")
+            if len(product_list) > 0:
+                print("Deseja deletar algum produto? (6)")
             print("Sair (3)\n")
 
     def handle_option(self, option: str):
 
         if not self.authenticated:
-            if option == menu_options.Options.CADASTRAR_SE.value:
+            if option == Options.REGISTER.value:
                 user_signup_data = self.user_manager.get_user_signup_info()
                 if user_signup_data is not None:
                     name, email, phone_number, password = user_signup_data
@@ -40,7 +43,7 @@ class Menu:
                 else:
                     print("\n---------------- Os dados de cadastro do usuário não são válidos ----------------\n")
 
-            elif option == menu_options.Options.AUTENTICAR_SE.value:
+            elif option == Options.AUTHENTICATE.value:
                 user_signin_data = self.auth_manager.get_user_signin_info()
                 if user_signin_data is not None:
                     email, password = user_signin_data
@@ -49,13 +52,13 @@ class Menu:
                         self.authenticated = True
                         print("---------- Autenticação bem-sucedida! ----------")
                         print("\n---------- Tela de início do sistema ---------- \n")
-            elif option == menu_options.Options.SAIR.value:
+            elif option == Options.EXIT.value:
                 print("Agradecemos por usar o nosso sistema.")
                 return False
             else:
                 print("\n---------------- Escolha alguma das opções exibidas ----------------\n")
         else:
-            if option == menu_options.Options.ADICIONAR_NOVO_PRODUTO.value:
+            if option == Options.ADD_NEW_PRODUCT.value:
                 product_data = self.product_manager.get_product_signup_info()
                 if product_data is not None:
                     name, price = product_data
@@ -63,10 +66,13 @@ class Menu:
                     self.product_manager.add_to_inventory(new_product.to_dict())
                 else:
                     raise ValueError("NULL não é permitido para 'preço'.")
-            elif option == menu_options.Options.LISTAR_PRODUTOS_EXISTENTES.value:
-                print(f'Os produtos existentes são: {self.product_manager.get_product_list()}\n')
+            elif option == Options.LIST_PRODUCTS.value:
+                print(f'Os produtos cadastrados são: {self.product_manager.get_product_list()}\n')
 
-            elif option == menu_options.Options.SAIR.value:
+            elif option == Options.DELETE_PRODUCT.value:
+                self.product_manager.confirm_delete()
+
+            elif option == Options.EXIT.value:
                 print("Agradecemos por usar o nosso sistema.")
                 return False
 

@@ -13,7 +13,7 @@ class ProductController:
     Attributes:
         __product_list (list): Lista para armazenar os produtos cadastrados.
     """
-
+    __CONFIRMATION_YES = 'sim'
     __product_list = []  # Lista para armazenar os produtos
 
     def __init__(self):
@@ -74,15 +74,56 @@ class ProductController:
         """
         return cls.__product_list
 
-    def __remove_whitespaces(self, name: str, price: str) -> tuple[str, str]:
+    @classmethod
+    def update_product_list(cls, new_product_list) -> None:
+        cls.__product_list = new_product_list
+
+    def __remove_whitespaces(price: str) -> str:
         """
         Remove espaços em branco de uma string.
 
         Args:
-            name (str): O nome a ser processado.
             price (str): O preço a ser processado.
 
         Returns:
-            tuple[str, str]: Uma tupla contendo o nome e o preço sem espaços em branco.
+            str: O preço sem espaços em branco.
         """
-        return name.replace(" ", ""), price.replace(" ", "")
+        return price.replace(" ", "")
+
+    def confirm_delete(self) -> None:
+        """
+        Solicita ao usuário o nome do produto a ser deletado e confirma a exclusão.
+
+        Retorna:
+            None
+        """
+        product_name = input("Informe o nome do produto que deseja deletar: ")
+        confirm_delete: str = input(f'Tem certeza de que deseja excluir o {product_name}? (Sim/Nao): ')
+        self.__delete_product(product_name.lower(), confirm_delete.lower())
+
+    def __delete_product(self, product_name: str, confirm_delete: str) -> None:
+        """
+        Exclui um produto da lista de produtos.
+
+        Parâmetros:
+            product_name (str): Nome do produto a ser excluído.
+            confirm_delete (str): Confirmação da exclusão (Sim/Não).
+
+        Retorna:
+            None
+        """
+        product_list = self.get_product_list()
+        if any(str(product['name']).lower() == product_name for product in product_list):
+            if confirm_delete == self.__CONFIRMATION_YES:
+
+                deleted_product = next(
+                    (product for product in product_list if str(product['name']).lower() == product_name), None)
+                if deleted_product is not None:
+                    product_list.remove(deleted_product)
+
+                self.update_product_list(product_list)
+                print(f"\n---- Produto '{product_name}' deletado com sucesso. \n----")
+            else:
+                print(f"\n----- A exclusão do produto '{product_name}' foi cancelada. -----\n")
+        else:
+            print(f"\n----- Produto não encontrado. -----\n")
