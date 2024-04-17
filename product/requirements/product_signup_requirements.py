@@ -3,9 +3,21 @@
 # Descrição: Sistema de gerenciamento de produtos
 class ProductSignupRequirements:
     name_requirements = (
-        f"A entrada deve consistir de caracteres alfanuméricos, espaços, pontos, vírgulas, hífens, apóstrofos e ampersands.\n"
-        f"O comprimento deve estar entre 3 e 20 caracteres.\n"
-        f"Caracteres especiais são permitidos conforme especificado acima."
+        f"A entrada deve consistir de caracteres alfanuméricos, espaços, pontos, vírgulas, hífens, apóstrofos e "
+        f"ampersands.\n"
+        f"O comprimento total da entrada deve estar entre 3 e 20 caracteres.\n"
+        f"Exemplos Válidos:\n"
+        f"  - João Silva\n"
+        f"  - Maria & José\n"
+        f"  - Teste-123\n"
+        f"  - M. Lopes\n"
+        f"  - Fernandes'\n"
+        f"Exemplos Inválidos:\n"
+        f"  - 12 (comprimento menor que 3 caracteres)\n"
+        f"  - Este é um exemplo de entrada muito longa para ser válida (comprimento maior que 20 caracteres)\n"
+        f"  - Entrada@ComSímbolos (símbolos não permitidos, como '@' e letras acentuadas não especificadas nos requisitos)\n"
+        f"  - Entrada Com Espaços 123 (números não são permitidos, pois apenas caracteres alfanuméricos são aceitos)\n"
+        f"  - Entrada+Teste (o símbolo '+' não está na lista de caracteres permitidos)"
     )
 
     price_requirements = (
