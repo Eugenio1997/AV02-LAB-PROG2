@@ -1,3 +1,6 @@
+# Autor: Eugenio Lopes Fernandes Lima
+# Contato: eugeniolopesfernandeslima1997@outlook.com
+# Descrição: Sistema de gerenciamento de produtos
 class ProductSignupRequirements:
     name_requirements = (
         f"A entrada deve consistir de caracteres alfanuméricos, espaços, pontos, vírgulas, hífens, apóstrofos e ampersands.\n"

@@ -1,3 +1,7 @@
+# Autor: Eugenio Lopes Fernandes Lima
+# Contato: eugeniolopesfernandeslima1997@outlook.com
+# Descrição: Sistema de gerenciamento de produtos
+
 from enum import Enum
 
 class Options(Enum):

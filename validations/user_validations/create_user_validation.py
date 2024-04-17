@@ -1,3 +1,7 @@
+# Autor: Eugenio Lopes Fernandes Lima
+# Contato: eugeniolopesfernandeslima1997@outlook.com
+# Descrição: Sistema de gerenciamento de produtos
+
 import re
 from user.requirements.user_signup_requirements import UserSignupRequirements
 

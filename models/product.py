@@ -1,3 +1,6 @@
+# Autor: Eugenio Lopes Fernandes Lima
+# Contato: eugeniolopesfernandeslima1997@outlook.com
+# Descrição: Sistema de gerenciamento de produtos
 class Product:
     """
     Representa um produto com um nome e um preço.
