@@ -127,3 +127,35 @@ class ProductController:
                 print(f"\n----- A exclusão do produto '{product_name}' foi cancelada. -----\n")
         else:
             print(f"\n----- Produto não encontrado. -----\n")
+
+    def confirm_edit(self):
+        product_name = input("Informe o nome do produto que deseja editar: ")
+        confirm_edit: str = input(f"Tem certeza de que deseja editar o '{product_name}'? (Sim/Nao): ")
+        self.__edit_product(product_name.lower(), confirm_edit.lower())
+
+    def __edit_product(self, product_name: str, confirm_delete: str):
+        product_list = self.get_product_list()
+        if any(str(product['name']).lower() == product_name for product in product_list):
+            if confirm_delete == self.__CONFIRMATION_YES:
+                for product in product_list:
+                    if str(product['name']).lower() == product_name:
+                        name: str = input(f"Informe o novo nome do produto '{product_name}': ")
+                        price: str = input(f"Informe o novo preço do produto\n '{product_name}': ")
+                        if (name is None or name == '') and (price is None or price == ''):
+                            print(f"\n---- Produto '{product_name}' editado com sucesso. \n----")
+                            return
+                        elif (name is None or name == '') and (price is not None or price != ''):
+                            product['price'] = self.product_validations_manager.validate_price(price)
+                        elif (name is not None or name != '') and (price is None or price == ''):
+                            product['name'] = self.product_validations_manager.validate_name(name)
+                        else:
+                            product['name'] = self.product_validations_manager.validate_name(name)
+                            product['price'] = self.product_validations_manager.validate_price(price)
+
+                self.update_product_list(product_list)
+                print(f"\n---- Produto '{product_name}' editado com sucesso. \n----")
+
+            else:
+                print(f"\n----- A edição do produto {product_name} foi cancelada. -----\n")
+        else:
+            print(f"\n----- Produto não encontrado. -----\n")

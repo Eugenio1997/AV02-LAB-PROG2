@@ -11,3 +11,4 @@ class Options(Enum):
     ADD_NEW_PRODUCT = "4"
     LIST_PRODUCTS = "5"
     DELETE_PRODUCT = "6"
+    EDIT_PRODUCT = "7"
