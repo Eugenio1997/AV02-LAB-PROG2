@@ -28,6 +28,8 @@ class Menu:
             print("Deseja listar todos os produtos? (5)")
             if len(product_list) > 0:
                 print("Deseja deletar algum produto? (6)")
+            if len(product_list) > 0:
+                print("Deseja editar algum produto? (7)")
             print("Sair (3)\n")
 
     def handle_option(self, option: str):
@@ -71,6 +73,9 @@ class Menu:
 
             elif option == Options.DELETE_PRODUCT.value:
                 self.product_manager.confirm_delete()
+
+            elif option == Options.EDIT_PRODUCT.value:
+                self.product_manager.confirm_edit()
 
             elif option == Options.EXIT.value:
                 print("Agradecemos por usar o nosso sistema.")
