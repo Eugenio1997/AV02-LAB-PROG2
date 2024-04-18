@@ -51,7 +51,7 @@ class ProductController:
         name: str = input(f'{ProductSignupRequirements.name_requirements}\nDigite o nome: ')
         price: str = input(f'{ProductSignupRequirements.price_requirements}\nDigite o preço: ')
 
-        name, price = self.__remove_whitespaces(name, price)
+        price = self.__remove_whitespaces(price)
 
         name_validated: str = self.product_validations_manager.validate_name(name)
         price_validated: str = self.product_validations_manager.validate_price(price)
