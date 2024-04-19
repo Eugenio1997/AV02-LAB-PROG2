@@ -61,13 +61,12 @@ class Menu:
                 print("\n---------------- Escolha alguma das opções exibidas ----------------\n")
         else:
             if option == Options.ADD_NEW_PRODUCT.value:
-                product_data = self.product_manager.get_product_signup_info()
-                if product_data is not None:
-                    name, price = product_data
-                    new_product = Product(name, price)
+                name_validated, price_validated = self.product_manager.get_product_signup_info()
+
+                if all([name_validated, price_validated]):
+                    new_product = Product(name_validated, price_validated)
                     self.product_manager.add_to_inventory(new_product.to_dict())
-                else:
-                    raise ValueError("NULL não é permitido para 'preço'.")
+
             elif option == Options.LIST_PRODUCTS.value:
                 print(f'Os produtos cadastrados são: {self.product_manager.get_product_list()}\n')
 

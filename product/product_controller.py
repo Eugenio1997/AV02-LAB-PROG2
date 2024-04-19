@@ -39,6 +39,22 @@ class ProductController:
         else:
             raise ValueError("O dicionário fornecido não contém as chaves 'name' e 'price'.")
 
+    def handle_validation_messages(self, name_validated, price_validated) -> None:
+        if (name_validated is None or price_validated is None) or (name_validated is None and price_validated is None):
+            print("\n---------------- Os campos são obrigatórios ----------------\n")
+            print("\n---------------- O limite máximo de tentativas expirou (3) ----------------\n")
+
+        elif all([name_validated, price_validated]):
+            print("\n---------------- Os valores inseridos são válidos ----------------\n")
+
+        elif not any([name_validated, price_validated]):
+            print("\n---------------- Os valores inseridos são inválidos ----------------\n")
+            print("\n---------------- O limite máximo de tentativas expirou (3) ----------------\n")
+
+        elif any([name_validated, price_validated]):
+            print("\n---------------- O valor de um dos campos é inválido ----------------\n")
+            print("\n---------------- O limite máximo de tentativas expirou (3) ----------------\n")
+
     def get_product_signup_info(self) -> tuple[str, str]:
         """
         Solicita e valida as informações de cadastro de um produto.
@@ -49,18 +65,16 @@ class ProductController:
         print("---------- Realizando Cadastro de Produto ----------")
 
         name: str = input(f'{ProductSignupRequirements.name_requirements}\nDigite o nome: ')
+
+        name_validated: str = self.product_validations_manager.validate_name(name)
+
         price: str = input(f'{ProductSignupRequirements.price_requirements}\nDigite o preço: ')
 
         price = self.__remove_whitespaces(price)
 
-        name_validated: str = self.product_validations_manager.validate_name(name)
         price_validated: str = self.product_validations_manager.validate_price(price)
 
-        while not (name_validated and price_validated):
-            print("\n---------------- Os campos são obrigatórios ----------------\n")
-            name, price = self.get_product_signup_info()
-            name_validated = self.product_validations_manager.validate_name(name)
-            price_validated = self.product_validations_manager.validate_price(price)
+        self.handle_validation_messages(name_validated, price_validated)
 
         return name_validated, price_validated
 
@@ -78,7 +92,7 @@ class ProductController:
     def update_product_list(cls, new_product_list) -> None:
         cls.__product_list = new_product_list
 
-    def __remove_whitespaces(price: str) -> str:
+    def __remove_whitespaces(self, price: str) -> str:
         """
         Remove espaços em branco de uma string.
 
