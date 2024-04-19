@@ -20,9 +20,8 @@ class ProductValidations:
         """
         Inicializa o objeto ProductValidations.
         """
-        pass
 
-    def __validate_product_signup_info(self, input_value, pattern, requirements_message):
+    def __validate_product_signup_info(self, input_value, pattern, requirements_message) -> str or None or False:
         """
         Valida um valor de entrada com base em um padrão de expressão regular.
 
@@ -35,6 +34,7 @@ class ProductValidations:
             Union[float, str]: O valor validado (como float se for numérico, ou como string caso contrário).
         """
         input_value_float = 0
+        MAXIMUM_RETRY = 2
         while True:
             if re.match(pattern, input_value):
                 input_value_copy = input_value
@@ -46,8 +46,14 @@ class ProductValidations:
 
                 return input_value
             else:
-                print(requirements_message)
-                input_value = input(f"\nDigite o valor novamente: ")
+                if MAXIMUM_RETRY != 0:
+                    MAXIMUM_RETRY = MAXIMUM_RETRY - 1
+                    print(requirements_message)
+                    input_value = input(f"\nDigite o valor novamente: ")
+                elif input_value is None or input_value == '':
+                    return None
+                else:
+                    return False
 
     def validate_name(self, name):
         """
