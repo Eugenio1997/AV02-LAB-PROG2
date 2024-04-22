@@ -1,4 +1,4 @@
-# Autor: Eugenio Lopes Fernandes Lima
+# Autor: Eugenio Lopes Fernandes Lima, Nathalya Lessa e Eliatan Almeida
 # Contato: eugeniolopesfernandeslima1997@outlook.com
 # Descrição: Sistema de gerenciamento de produtos
 class ProductSignupRequirements:
