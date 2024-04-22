@@ -4,7 +4,7 @@
 
 import re
 from product.requirements.product_signup_requirements import ProductSignupRequirements
-
+#teste
 
 class ProductValidations:
     """
