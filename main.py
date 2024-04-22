@@ -1,6 +1,7 @@
 # Autor: Eugenio Lopes Fernandes Lima
 # Contato: eugeniolopesfernandeslima1997@outlook.com
 # Descrição: Sistema de gerenciamento de produtos
+import time
 
 from enums.menu_options import Options
 from models.user import User
@@ -66,6 +67,10 @@ class Menu:
                 if all([name_validated, price_validated]):
                     new_product = Product(name_validated, price_validated)
                     self.product_manager.add_to_inventory(new_product.to_dict())
+
+                else:
+                    print("\n ---------- Redirecionando para a Tela de início do sistema ---------- \n")
+                    time.sleep(0.5)
 
             elif option == Options.LIST_PRODUCTS.value:
                 print(f'Os produtos cadastrados são: {self.product_manager.get_product_list()}\n')

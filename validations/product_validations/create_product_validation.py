@@ -34,26 +34,18 @@ class ProductValidations:
             Union[float, str]: O valor validado (como float se for numérico, ou como string caso contrário).
         """
         input_value_float = 0
-        MAXIMUM_RETRY = 2
-        while True:
-            if re.match(pattern, input_value):
-                input_value_copy = input_value
-                input_value_copy = input_value_copy.replace('.', '').replace(',', '')
 
-                if input_value_copy.isdigit():
-                    input_value_float = self.convert_to_float(input_value.replace(',', ''))
-                    return input_value_float
+        if re.match(pattern, input_value):
+            input_value_copy = input_value
+            input_value_copy = input_value_copy.replace('.', '').replace(',', '')
 
-                return input_value
-            else:
-                if MAXIMUM_RETRY != 0:
-                    MAXIMUM_RETRY = MAXIMUM_RETRY - 1
-                    print(requirements_message)
-                    input_value = input(f"\nDigite o valor novamente: ")
-                elif input_value is None or input_value == '':
-                    return None
-                else:
-                    return False
+            if input_value_copy.isdigit():
+                input_value_float = self.convert_to_float(input_value.replace(',', ''))
+                return input_value_float
+
+            return input_value
+        else:
+            print(requirements_message)
 
     def validate_name(self, name):
         """
