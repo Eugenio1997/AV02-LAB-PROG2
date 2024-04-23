@@ -4,6 +4,7 @@
 
 from user.user_controller import UserController
 
+
 class Authentication:
     """
     Classe responsável pela autenticação de usuários.
@@ -18,24 +19,16 @@ class Authentication:
         """
         self.user_manager = UserController()
 
-    def authenticate_user(self, email, password):
-        """
-        Autentica um usuário com base no email e senha fornecidos.
+    def authenticate_user(self, email: str, password: str):
 
-        Args:
-            email (str): O email do usuário.
-            password (str): A senha do usuário.
-
-        Returns:
-            bool: True se a autenticação for bem-sucedida, False caso contrário.
-        """
         user_list = self.user_manager.get_user_list()
+
         for user in user_list:
             if user.get('email') == email and user.get('password') == password:
                 return True
         return False
 
-    def get_user_signin_info(self) -> tuple[str, str] | None:
+    def get_user_signin_info(self) -> tuple[str, str]:
         """
         Solicita e retorna as informações de login do usuário.
 
@@ -48,7 +41,6 @@ class Authentication:
 
         if self.is_empty_signin_data(email, password):
             print(f'\n---------------- Não podem conter campos em branco ----------------\n')
-            return None
 
         return email, password
 

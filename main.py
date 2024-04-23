@@ -9,14 +9,23 @@ from user.user_controller import UserController
 from user.authentication import Authentication
 from product.product_controller import ProductController
 from models.product import Product
+from validations.auth_validations.authenticate_user_validation import AuthenticateUserValidations
 
 
 class Menu:
+    MAX_RETRIES = 3
+    retry_count = 0
+    email: str
+    password: str
+    user_exists: bool
+    counter = 3
+
     def __init__(self):
         self.authenticated = False
         self.product_manager = ProductController()
         self.user_manager = UserController()
         self.auth_manager = Authentication()
+        self.auth_validations_manager = AuthenticateUserValidations()
 
     def display(self):
         product_list = self.product_manager.get_product_list()
@@ -47,14 +56,33 @@ class Menu:
                     print("\n---------------- Os dados de cadastro do usuário não são válidos ----------------\n")
 
             elif option == Options.AUTHENTICATE.value:
-                user_signin_data = self.auth_manager.get_user_signin_info()
-                if user_signin_data is not None:
-                    email, password = user_signin_data
-                    authenticated = self.auth_manager.authenticate_user(email, password)
-                    if authenticated:
-                        self.authenticated = True
-                        print("---------- Autenticação bem-sucedida! ----------")
-                        print("\n---------- Tela de início do sistema ---------- \n")
+
+                while self.retry_count < self.MAX_RETRIES:
+
+                    self.counter -= 1
+                    self.retry_count += 1
+                    self.email, self.password = self.auth_manager.get_user_signin_info()
+                    self.user_exists: bool = self.auth_validations_manager.validate_user_existence(self.email)
+                    if self.user_exists:
+                        authenticated = self.auth_manager.authenticate_user(self.email, self.password)
+                        if authenticated:
+                            self.authenticated = True
+                            print("---------- Autenticação bem-sucedida! ----------")
+                            print("\n---------- Tela de início do sistema ---------- \n")
+                        break
+
+                    else:
+                        print("\n---------------- Usuário ou senha incorretos ---------------- \n")
+                        if self.counter >= 1:
+                            print(f"---------------- Tentativas restantes - ({self.counter}) ---------------- \n")
+
+                if self.retry_count == self.MAX_RETRIES:
+                    print("\n---------------- Máximo de retentativas alcançado. Por favor, tente novamente mais "
+                          "tarde.---------------- \n")
+
+                    time.sleep(0.5)
+
+
             elif option == Options.EXIT.value:
                 print("Agradecemos por usar o nosso sistema.")
                 return False
