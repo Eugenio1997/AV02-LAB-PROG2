@@ -3,6 +3,7 @@
 # Descrição: Sistema de gerenciamento de produtos
 import time
 
+from enums.auth_messages import AuthMessages
 from enums.menu_options import Options
 from models.user import User
 from user.user_controller import UserController
@@ -67,19 +68,27 @@ class Menu:
                         authenticated = self.auth_manager.authenticate_user(self.email, self.password)
                         if authenticated:
                             self.authenticated = True
-                            print("---------- Autenticação bem-sucedida! ----------")
+                            print(f"\n{AuthMessages.SUCCESS.value}\n")
                             print("\n---------- Tela de início do sistema ---------- \n")
-                        break
-
+                            break
+                        else:
+                            print(f"\n{AuthMessages.INVALID_CREDENTIALS.value}\n")
+                            if self.counter >= 1:
+                                print(f"---------------- Tentativas restantes - ({self.counter}) ---------------- \n")
+                    elif not any([self.email, self.password]):
+                        print(f"\n{AuthMessages.BLANK_FIELDS.value}\n")
+                        if self.counter >= 1:
+                            print(f"---------------- Tentativas restantes - ({self.counter}) ---------------- \n")
                     else:
-                        print("\n---------------- Usuário ou senha incorretos ---------------- \n")
+                        print(f"\n{AuthMessages.INVALID_CREDENTIALS.value}\n")
                         if self.counter >= 1:
                             print(f"---------------- Tentativas restantes - ({self.counter}) ---------------- \n")
 
                 if self.retry_count == self.MAX_RETRIES:
-                    print("\n---------------- Máximo de retentativas alcançado. Por favor, tente novamente mais "
-                          "tarde.---------------- \n")
-
+                    print(f"{AuthMessages.MAX_RETRIES.value}\n")
+                    if self.retry_count == 3 and self.counter == 0:
+                        self.retry_count = 0
+                        self.counter = 3
                     time.sleep(0.5)
 
 
