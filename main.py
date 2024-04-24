@@ -85,7 +85,7 @@ class Menu:
                         if self.counter >= 1:
                             print(f"---------------- Tentativas restantes - ({self.counter}) ---------------- \n")
 
-                if self.retry_count == self.MAX_RETRIES:
+                if self.retry_count == self.MAX_RETRIES and not self.authenticated:
                     print(f"{AuthMessages.MAX_RETRIES.value}\n")
                     if self.retry_count == 3 and self.counter == 0:
                         self.retry_count = 0
