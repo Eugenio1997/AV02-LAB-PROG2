@@ -34,7 +34,7 @@ class Menu:
         product_list = self.product_manager.get_product_list()
         if not self.authenticated:
             print("O que deseja?\n")
-            print("Cadastrar-se (1)\nAutenticar-se (2)\nSair (3)\n")
+            print("Cadastrar-se (1)\nAutenticar-se (2)\nParar execução do programa (3)\n")
         else:
             print(f'Bem-vindo! Você está autenticado.')
             print("Deseja adicionar um novo produto? (4)")
@@ -43,7 +43,7 @@ class Menu:
                 print("Deseja deletar algum produto? (6)")
             if len(product_list) > 0:
                 print("Deseja editar algum produto? (7)")
-            print("Sair (3)\n")
+            print("Deslogar-se (8)\n")
 
     def handle_option(self, option: str):
         user_saved: bool = False
@@ -119,7 +119,7 @@ class Menu:
 
 
             elif option == Options.EXIT.value:
-                print("Agradecemos por usar o nosso sistema.")
+                print("\n---------------- Agradecemos por usar o nosso sistema. ----------------\n")
                 return False
             else:
                 print("\n---------------- Escolha alguma das opções exibidas ----------------\n")
@@ -166,10 +166,11 @@ class Menu:
 
             elif option == Options.EDIT_PRODUCT.value:
                 self.product_manager.confirm_edit()
+            
+            elif option == Options.LOGOUT.value:
+                print("\n---------------- Logout realizado com sucesso!. ----------------\n")
+                self.authenticated = False
 
-            elif option == Options.EXIT.value:
-                print("Agradecemos por usar o nosso sistema.")
-                return False
 
             else:
                 print("\n---------------- Escolha alguma das opções exibidas ----------------\n")

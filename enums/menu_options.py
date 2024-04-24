@@ -12,3 +12,5 @@ class Options(Enum):
     LIST_PRODUCTS = "5"
     DELETE_PRODUCT = "6"
     EDIT_PRODUCT = "7"
+    LOGOUT = "8"
+
