@@ -39,20 +39,5 @@ class Authentication:
         email = input("Digite seu email: ")
         password = input("Digite sua senha: ")
 
-        if self.is_empty_signin_data(email, password):
-            print(f'\n---------------- Não podem conter campos em branco ----------------\n')
-
         return email, password
 
-    def is_empty_signin_data(self, email: str, password: str) -> bool:
-        """
-        Verifica se o email e a senha estão em branco.
-
-        Args:
-            email (str): O email a ser verificado.
-            password (str): A senha a ser verificada.
-
-        Returns:
-            bool: True se ambos estiverem em branco, False caso contrário.
-        """
-        return not any([email, password])
