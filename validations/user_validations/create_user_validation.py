@@ -14,23 +14,10 @@ class UserValidations:
         pass
 
     def __validate_signup_info(self, input_value, pattern, requirements_message):
-        """
-        Valida as informações do usuário.
 
-        Args:
-            input_value (str): O valor a ser validado.
-            pattern (str): O padrão regex para validação.
-            requirements_message (str): A mensagem de requisitos.
+        if re.match(pattern, input_value):
+            return input_value
 
-        Returns:
-            str: O valor validado, se válido.
-        """
-        while True:
-            if re.match(pattern, input_value):
-                return input_value
-            else:
-                print(requirements_message)
-                input_value = input(f"\nDigite o valor novamente: ")
 
     def validate_name(self, name):
         """
