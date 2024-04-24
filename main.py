@@ -22,7 +22,6 @@ class Menu:
     password: str
     user_exists: bool
     counter: int = 3
-    user_saved: bool
 
     def __init__(self):
         self.authenticated = False
@@ -47,7 +46,7 @@ class Menu:
             print("Sair (3)\n")
 
     def handle_option(self, option: str):
-
+        user_saved: bool = False
         if not self.authenticated:
             if option == Options.REGISTER.value:
 
@@ -61,8 +60,8 @@ class Menu:
                     new_user = User(name, email, phone_number, password)
                     user_dict = new_user.to_dict()
                     if all([name, email, phone_number, password]):
-                        self.user_saved = self.user_manager.save(user_dict)
-                        if self.user_saved:
+                        user_saved = self.user_manager.save(user_dict)
+                        if user_saved:
                             print(f"\n{UserSignupMessages.SUCCESS.value}\n")
                             break
                     elif not any([name, email, phone_number, password]):
@@ -75,7 +74,7 @@ class Menu:
                             print(f"---------------- Tentativas restantes - ({self.counter}) ---------------- \n")
 
                 if self.retry_count == self.MAX_RETRIES:
-                    if not self.user_saved:
+                    if not user_saved:
                         print(f"{UserSignupMessages.MAX_RETRIES.value}\n")
                     if self.retry_count == 3 and self.counter == 0:
                         self.retry_count = 0
