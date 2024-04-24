@@ -44,8 +44,6 @@ class ProductValidations:
                 return input_value_float
 
             return input_value
-        else:
-            print(requirements_message)
 
     def validate_name(self, name):
         """

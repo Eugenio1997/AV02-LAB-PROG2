@@ -3,6 +3,7 @@
 # Descrição: Sistema de gerenciamento de produtos
 import time
 
+from enums.add_new_product_messages import AddNewProductMessages
 from enums.auth_messages import AuthMessages
 from enums.menu_options import Options
 from models.user import User
@@ -98,16 +99,39 @@ class Menu:
             else:
                 print("\n---------------- Escolha alguma das opções exibidas ----------------\n")
         else:
+
             if option == Options.ADD_NEW_PRODUCT.value:
-                name_validated, price_validated = self.product_manager.get_product_signup_info()
+                self.counter = 3
+                self.retry_count = 0
+                while self.retry_count < self.MAX_RETRIES:
 
-                if all([name_validated, price_validated]):
-                    new_product = Product(name_validated, price_validated)
-                    self.product_manager.add_to_inventory(new_product.to_dict())
+                    self.counter -= 1
+                    self.retry_count += 1
+                    name_validated, price_validated = self.product_manager.get_product_signup_info()
 
-                else:
-                    print("\n ---------- Redirecionando para a Tela de início do sistema ---------- \n")
-                    time.sleep(0.5)
+                    if all([name_validated, price_validated]):
+
+                        new_product = Product(name_validated, price_validated)
+                        product_saved = self.product_manager.add_to_inventory(new_product.to_dict())
+                        if product_saved:
+                            print(f"\n{AddNewProductMessages.SUCCESS.value}\n")
+                            break
+                    elif not any([name_validated, price_validated]):
+                        print(f"\n{AddNewProductMessages.BLANK_FIELDS.value}\n")
+                        if self.counter >= 1:
+                            print(f"---------------- Tentativas restantes - ({self.counter}) ---------------- \n")
+
+                    else:
+                        print(f"\n{AddNewProductMessages.INVALID_VALUES.value}\n")
+                        if self.counter >= 1:
+                            print(f"---------------- Tentativas restantes - ({self.counter}) ---------------- \n")
+
+                    if self.retry_count == self.MAX_RETRIES:
+                        print(f"{AddNewProductMessages.MAX_RETRIES.value}\n")
+                        if self.retry_count == 3 and self.counter == 0:
+                            self.retry_count = 0
+                            self.counter = 3
+                        time.sleep(0.5)
 
             elif option == Options.LIST_PRODUCTS.value:
                 print(f'Os produtos cadastrados são: {self.product_manager.get_product_list()}\n')

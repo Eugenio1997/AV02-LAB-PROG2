@@ -4,7 +4,7 @@
 
 from validations.product_validations.create_product_validation import ProductValidations
 from product.requirements.product_signup_requirements import ProductSignupRequirements
-
+from enums.auth_messages import AuthMessages
 
 class ProductController:
     """
@@ -17,6 +17,7 @@ class ProductController:
     __product_list = []  # Lista para armazenar os produtos
     MAX_RETRIES = 3
     retry_count = 0
+    counter = 3
 
     def __init__(self):
         """
@@ -25,7 +26,7 @@ class ProductController:
         self.product_validations_manager = ProductValidations()
 
     @classmethod
-    def add_to_inventory(cls, product_dict) -> None:
+    def add_to_inventory(cls, product_dict) -> bool:
         """
         Adiciona um produto ao inventário.
 
@@ -37,10 +38,9 @@ class ProductController:
         """
         if isinstance(product_dict, dict) and "name" in product_dict and "price" in product_dict:
             cls.__product_list.append({"name": product_dict["name"], "price": product_dict["price"]})
-            print("--------------- Cadastro realizado com sucesso. ---------------\n")
+            return True
         else:
             raise ValueError("O dicionário fornecido não contém as chaves 'name' e 'price'.")
-
 
     def get_product_signup_info(self) -> tuple[str, str] or tuple[None, None]:
         """
@@ -51,25 +51,14 @@ class ProductController:
         """
         print("---------- Realizando Cadastro de Produto ----------")
 
-        while self.retry_count < self.MAX_RETRIES:
-            name = input(f'{ProductSignupRequirements.name_requirements}\nDigite o nome: ')
-            name_validated = self.product_validations_manager.validate_name(name)
+        name = input(f'{ProductSignupRequirements.name_requirements}\nDigite o nome: ')
+        name_validated = self.product_validations_manager.validate_name(name)
 
-            price = input(f'{ProductSignupRequirements.price_requirements}\nDigite o preço: ')
-            price = self.__remove_whitespaces(price)
-            price_validated = self.product_validations_manager.validate_price(price)
+        price = input(f'{ProductSignupRequirements.price_requirements}\nDigite o preço: ')
+        price = self.__remove_whitespaces(price)
+        price_validated = self.product_validations_manager.validate_price(price)
 
-            if name_validated and price_validated:
-                # Ambos os campos são válidos, continue com a operação desejada
-                print("\n---------------- Os valores inseridos são válidos ----------------\n")
-                return name_validated, price_validated
-            else:
-                self.retry_count += 1
-
-        if self.retry_count == self.MAX_RETRIES:
-            print("\n---------------- Máximo de retentativas alcançado. Por favor, tente novamente mais "
-                  "tarde.---------------- \n")
-            return None, None
+        return name_validated, price_validated
 
     @classmethod
     def get_product_list(cls) -> list[dict[str, float]]:
