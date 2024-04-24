@@ -36,15 +36,11 @@ class UserController:
         email_validated: str = self.user_validations_manager.validate_email(email)
         password_validated: str = self.user_validations_manager.validate_password(password)
 
-        while not [name_validated, email_validated, phone_number_validated, password_validated]:
-            print("\n---------------- Os campos são obrigatórios ----------------\n")
-            name_validated, email_validated, phone_number_validated, password_validated = self.get_user_signup_info()
-
         # return validated_user_data
         return name_validated, email_validated, phone_number_validated, password_validated
 
     @classmethod
-    def save(cls, user_dict: dict[str, str]) -> None:
+    def save(cls, user_dict: dict[str, str]) -> bool:
         """Salva as informações do usuário.
 
         Args:
@@ -59,7 +55,7 @@ class UserController:
             cls.__user_list.append(
                 dict(name=user_dict["name"], phone_number=user_dict["phone_number"], email=user_dict["email"],
                      password=user_dict["password"]))
-            print("--------------- Cadastro realizado com sucesso. ---------------\n")
+            return True
         else:
             raise ValueError("O dicionário fornecido não contém as chaves 'name', 'phone_number', 'email' e 'password'")
 

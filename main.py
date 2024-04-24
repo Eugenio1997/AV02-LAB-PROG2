@@ -6,6 +6,7 @@ import time
 from enums.add_new_product_messages import AddNewProductMessages
 from enums.auth_messages import AuthMessages
 from enums.menu_options import Options
+from enums.user_signup_messages import UserSignupMessages
 from models.user import User
 from user.user_controller import UserController
 from user.authentication import Authentication
@@ -20,7 +21,8 @@ class Menu:
     email: str
     password: str
     user_exists: bool
-    counter = 3
+    counter: int = 3
+    user_saved: bool
 
     def __init__(self):
         self.authenticated = False
@@ -48,14 +50,37 @@ class Menu:
 
         if not self.authenticated:
             if option == Options.REGISTER.value:
-                user_signup_data = self.user_manager.get_user_signup_info()
-                if user_signup_data is not None:
+
+                while self.retry_count < self.MAX_RETRIES:
+
+                    self.counter -= 1
+                    self.retry_count += 1
+
+                    user_signup_data = self.user_manager.get_user_signup_info()
                     name, email, phone_number, password = user_signup_data
                     new_user = User(name, email, phone_number, password)
                     user_dict = new_user.to_dict()
-                    self.user_manager.save(user_dict)
-                else:
-                    print("\n---------------- Os dados de cadastro do usuário não são válidos ----------------\n")
+                    if all([name, email, phone_number, password]):
+                        self.user_saved = self.user_manager.save(user_dict)
+                        if self.user_saved:
+                            print(f"\n{UserSignupMessages.SUCCESS.value}\n")
+                            break
+                    elif not any([name, email, phone_number, password]):
+                        print(f"\n{UserSignupMessages.BLANK_FIELDS.value}\n")
+                        if self.counter >= 1:
+                            print(f"---------------- Tentativas restantes - ({self.counter}) ---------------- \n")
+                    else:
+                        print(f"\n{UserSignupMessages.INVALID_CREDENTIALS.value}\n")
+                        if self.counter >= 1:
+                            print(f"---------------- Tentativas restantes - ({self.counter}) ---------------- \n")
+
+                if self.retry_count == self.MAX_RETRIES:
+                    if not self.user_saved:
+                        print(f"{UserSignupMessages.MAX_RETRIES.value}\n")
+                    if self.retry_count == 3 and self.counter == 0:
+                        self.retry_count = 0
+                        self.counter = 3
+                    time.sleep(0.5)
 
             elif option == Options.AUTHENTICATE.value:
 
@@ -85,8 +110,9 @@ class Menu:
                         if self.counter >= 1:
                             print(f"---------------- Tentativas restantes - ({self.counter}) ---------------- \n")
 
-                if self.retry_count == self.MAX_RETRIES and not self.authenticated:
-                    print(f"{AuthMessages.MAX_RETRIES.value}\n")
+                if self.retry_count == self.MAX_RETRIES:
+                    if not self.authenticated:
+                        print(f"{AuthMessages.MAX_RETRIES.value}\n")
                     if self.retry_count == 3 and self.counter == 0:
                         self.retry_count = 0
                         self.counter = 3
