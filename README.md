@@ -5,6 +5,7 @@ Este repositório contém o código-fonte para a Avaliação 02 da disciplina de
 ## Descrição
 
 O projeto consiste em um sistema de gerenciamento de produtos, onde os usuários podem se cadastrar, autenticar-se, adicionar novos produtos, listar, editar e deletar os produtos existentes.
+
 ## Tecnologias Utilizadas
 
 - Python
@@ -29,13 +30,23 @@ O projeto consiste em um sistema de gerenciamento de produtos, onde os usuários
 ## Como Usar
 
 Ao executar o programa, siga as instruções exibidas no console para realizar as seguintes operações:
-- Cadastro de usuário
-- Autenticação de usuário
-- Após autenticado, você poderá:
+
+- Não autenticado, voce poderá:
+  - Cadastrar-se
+  - Autenticar-se
+  - Parar a execução do programa
+    
+- Após autenticado e contendo nenhum produto cadastrado, você poderá:
   - Adicionar um novo produto
   - Listar os produtos existentes
-  - Editar os produtos existentes
-  - Deletar os produtos Existentes
+  - Deslogar-se
+    
+- Após autenticado e contendo produto(s) cadastrado(s), você poderá:
+  - Adicionar um novo produto
+  - Listar os produtos existentes
+  - Editar algum produto
+  - Deletar algum produto
+  - Deslogar-se
 
 ## Contribuição
 
