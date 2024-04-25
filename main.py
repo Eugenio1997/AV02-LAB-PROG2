@@ -64,6 +64,10 @@ class Menu:
                         if user_saved:
                             print(f"\n{UserSignupMessages.SUCCESS.value}\n")
                             break
+                        else:
+                            print(f"\n{UserSignupMessages.EMAIL_IN_USE.value}\n")
+                            if self.counter >= 1:
+                                print(f"---------------- Tentativas restantes - ({self.counter}) ---------------- \n")
                     elif not any([name, email, phone_number, password]):
                         print(f"\n{UserSignupMessages.BLANK_FIELDS.value}\n")
                         if self.counter >= 1:
