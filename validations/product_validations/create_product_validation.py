@@ -42,7 +42,7 @@ class ProductValidations:
             input_value_copy = input_value_copy.replace('.', '').replace(',', '')
 
             if input_value_copy.isdigit():
-                input_value_float = self.convert_to_float(input_value.replace(',', ''))
+                input_value_float = float(input_value.replace(',', ''))
                 return input_value_float
 
             return input_value
@@ -74,18 +74,6 @@ class ProductValidations:
         price_pattern = r'^\d{1,3}(?:,\d{3})*(?:\.\d{2})?$'
         requirements_message = ProductSignupRequirements.price_requirements
         return self.__validate_product_signup_info(price, price_pattern, requirements_message)
-
-    def convert_to_float(self, price):
-        """
-        Converte uma string de preço para um valor float.
-
-        Args:
-            price (str): A string de preço a ser convertida.
-
-        Returns:
-            float: O valor convertido para float.
-        """
-        return float(price)
 
     def is_empty_product_name(self, product_name: str) -> bool:
 
