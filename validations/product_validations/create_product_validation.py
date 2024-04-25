@@ -3,8 +3,10 @@
 # Descrição: Sistema de gerenciamento de produtos
 
 import re
+import time
+
 from product.requirements.product_signup_requirements import ProductSignupRequirements
-#teste
+
 
 class ProductValidations:
     """
@@ -55,7 +57,7 @@ class ProductValidations:
         Returns:
             str: O nome validado.
         """
-        name_pattern = r'^[a-zA-Z0-9\s.,\-\'&]{3,20}$'
+        name_pattern = r'^[a-zA-Z0-9\s.,\-\'&áéíóúÁÉÍÓÚçãõâêîôûÇÃÕÂÊÎÔÛ]{3,40}$'
         requirements_message = ProductSignupRequirements.name_requirements
         return self.__validate_product_signup_info(name, name_pattern, requirements_message)
 
@@ -84,3 +86,12 @@ class ProductValidations:
             float: O valor convertido para float.
         """
         return float(price)
+
+    def is_empty_product_name(self, product_name: str) -> bool:
+
+        if not any(product_name):
+            print(f"\n---- O nome do produto não foi informado. Você será redirecionado para a tela principal \n----")
+            time.sleep(0.5)
+            return True
+
+        return False

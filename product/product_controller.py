@@ -1,6 +1,7 @@
 # Autor: Eugenio Lopes Fernandes Lima, Nathalya Lessa e Eliatan Almeida
 # Contato: eugeniolopesfernandeslima1997@outlook.com
 # Descrição: Sistema de gerenciamento de produtos
+import time
 
 from validations.product_validations.create_product_validation import ProductValidations
 from product.requirements.product_signup_requirements import ProductSignupRequirements
@@ -94,6 +95,9 @@ class ProductController:
             None
         """
         product_name = input("Informe o nome do produto que deseja deletar: ")
+        if self.product_validations_manager.is_empty_product_name(product_name):
+            return
+
         confirm_delete: str = input(f'Tem certeza de que deseja excluir o {product_name}? (Sim/Nao): ')
         self.__delete_product(product_name.lower(), confirm_delete.lower())
 
@@ -126,6 +130,9 @@ class ProductController:
 
     def confirm_edit(self):
         product_name = input("Informe o nome do produto que deseja editar: ")
+        if self.product_validations_manager.is_empty_product_name(product_name):
+            return
+
         confirm_edit: str = input(f"Tem certeza de que deseja editar o '{product_name}'? (Sim/Nao): ")
         self.__edit_product(product_name.lower(), confirm_edit.lower())
 
