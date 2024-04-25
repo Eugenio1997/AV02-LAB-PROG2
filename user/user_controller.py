@@ -1,6 +1,7 @@
 # Autor: Eugenio Lopes Fernandes Lima, Nathalya Lessa e Eliatan Almeida
 # Contato: eugeniolopesfernandeslima1997@outlook.com
 # Descrição: Sistema de gerenciamento de produtos
+from typing import List, Dict
 
 from validations.user_validations.create_user_validation import UserValidations
 from user.requirements.user_signup_requirements import UserSignupRequirements
@@ -50,14 +51,18 @@ class UserController:
             ValueError: Se o dicionário não contiver as chaves necessárias.
 
         """
-        if isinstance(user_dict,
-                      dict) and "name" in user_dict and "phone_number" in user_dict and "email" in user_dict and "password" in user_dict:
-            cls.__user_list.append(
-                dict(name=user_dict["name"], phone_number=user_dict["phone_number"], email=user_dict["email"],
-                     password=user_dict["password"]))
-            return True
-        else:
-            raise ValueError("O dicionário fornecido não contém as chaves 'name', 'phone_number', 'email' e 'password'")
+        if not any([cls.email_exists(user_dict["email"])]):
+            if isinstance(user_dict,
+                          dict) and "name" in user_dict and "phone_number" in user_dict and "email" in user_dict and "password" in user_dict:
+                cls.__user_list.append(
+                    dict(name=user_dict["name"], phone_number=user_dict["phone_number"], email=user_dict["email"],
+                         password=user_dict["password"]))
+                return True
+            else:
+                raise ValueError("O dicionário fornecido não contém as chaves 'name', 'phone_number', 'email' e "
+                                 "'password'")
+
+        return False
 
     @classmethod
     def get_user_list(cls):
@@ -84,3 +89,8 @@ class UserController:
         password = password.replace(" ", "")
 
         return email, password
+
+    @classmethod
+    def email_exists(cls, email: str) -> bool:
+        user_list = cls.get_user_list()
+        return any(user for user in user_list if user["email"] == email)
