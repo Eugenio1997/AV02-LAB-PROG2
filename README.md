@@ -41,6 +41,12 @@ Ao executar o programa, siga as instruções exibidas no console para realizar a
 
 Contribuições são bem-vindas! Sinta-se à vontade para enviar pull requests com melhorias, correções de bugs ou novas funcionalidades.
 
+## Colaboradores
+
+- [Eugenio Lopes](https://github.com/Eugenio1997) - Desenvolvedor, Colaborador de Documentação e Líder de Projeto.
+- [Nathalya Lessa](https://github.com/nathalyalessa09) - Desenvolvedor.
+- [Eliatan Almeida](https://github.com/XxHypeTan) - Desenvolvedor.
+
 ## Licença
 
 Este projeto está licenciado sob a [MIT License](https://opensource.org/licenses/MIT).
