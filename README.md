@@ -55,7 +55,6 @@ Contribuições são bem-vindas! Sinta-se à vontade para enviar pull requests c
 ## Colaboradores
 
 - [Eugenio Lopes](https://github.com/Eugenio1997) - Desenvolvedor, Colaborador de Documentação e Líder de Projeto.
-- [Nathalya Lessa](https://github.com/nathalyalessa09) - Desenvolvedor.
 - [Eliatan Almeida](https://github.com/XxHypeTan) - Desenvolvedor.
 
 ## Licença
