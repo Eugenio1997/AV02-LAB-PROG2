@@ -1,3 +1,7 @@
+# Autor: Eugenio Lopes Fernandes Lima e Eliatan Almeida
+# Contato: eugeniolopesfernandeslima1997@outlook.com
+# Descrição: Sistema de gerenciamento de produtos
+
 from user.user_controller import UserController
 
 
