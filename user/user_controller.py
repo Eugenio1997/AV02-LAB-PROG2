@@ -1,7 +1,6 @@
 # Autor: Eugenio Lopes Fernandes Lima e Eliatan Almeida
 # Contato: eugeniolopesfernandeslima1997@outlook.com
 # Descrição: Sistema de gerenciamento de produtos
-from typing import List, Dict
 
 from validations.user_validations.create_user_validation import UserValidations
 from user.requirements.user_signup_requirements import UserSignupRequirements
@@ -37,7 +36,6 @@ class UserController:
         email_validated: str = self.user_validations_manager.validate_email(email)
         password_validated: str = self.user_validations_manager.validate_password(password)
 
-        # return validated_user_data
         return name_validated, email_validated, phone_number_validated, password_validated
 
     @classmethod
