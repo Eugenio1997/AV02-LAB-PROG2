@@ -2,6 +2,7 @@
 # Contato: eugeniolopesfernandeslima1997@outlook.com
 # Descrição: Sistema de gerenciamento de produtos
 import time
+from typing import Optional
 
 from enums.add_new_product_messages import AddNewProductMessages
 from enums.auth_messages import AuthMessages
@@ -45,6 +46,15 @@ class Menu:
                 print("Deseja editar algum produto? (7)")
             print("Deslogar-se (8)\n")
 
+    def check_and_reset_retries_count(self, option: Optional[str] = None):
+
+        if self.retry_count == self.MAX_RETRIES and self.counter == 0:
+            if not self.authenticated and option == Options.AUTHENTICATE.value:
+                print(f"{AuthMessages.MAX_RETRIES.value}\n")
+            self.retry_count = 0
+            self.counter = 3
+            time.sleep(0.5)
+
     def handle_option(self, option: str):
         user_saved: bool = False
         if not self.authenticated:
@@ -77,13 +87,7 @@ class Menu:
                         if self.counter >= 1:
                             print(f"---------------- Tentativas restantes - ({self.counter}) ---------------- \n")
 
-                if self.retry_count == self.MAX_RETRIES:
-                    if not user_saved:
-                        print(f"{UserSignupMessages.MAX_RETRIES.value}\n")
-                    if self.retry_count == 3 and self.counter == 0:
-                        self.retry_count = 0
-                        self.counter = 3
-                    time.sleep(0.5)
+                self.check_and_reset_retries_count()
 
             elif option == Options.AUTHENTICATE.value:
 
@@ -113,14 +117,7 @@ class Menu:
                         if self.counter >= 1:
                             print(f"---------------- Tentativas restantes - ({self.counter}) ---------------- \n")
 
-                if self.retry_count == self.MAX_RETRIES:
-                    if not self.authenticated:
-                        print(f"{AuthMessages.MAX_RETRIES.value}\n")
-                    if self.retry_count == 3 and self.counter == 0:
-                        self.retry_count = 0
-                        self.counter = 3
-                    time.sleep(0.5)
-
+                self.check_and_reset_retries_count(option)
 
             elif option == Options.EXIT.value:
                 print("\n---------------- Agradecemos por usar o nosso sistema. ----------------\n")
@@ -155,12 +152,7 @@ class Menu:
                         if self.counter >= 1:
                             print(f"---------------- Tentativas restantes - ({self.counter}) ---------------- \n")
 
-                    if self.retry_count == self.MAX_RETRIES:
-                        print(f"{AddNewProductMessages.MAX_RETRIES.value}\n")
-                        if self.retry_count == 3 and self.counter == 0:
-                            self.retry_count = 0
-                            self.counter = 3
-                        time.sleep(0.5)
+                    self.check_and_reset_retries_count()
 
             elif option == Options.LIST_PRODUCTS.value:
                 print(f'Os produtos cadastrados são: {self.product_manager.get_product_list()}\n')
@@ -170,12 +162,10 @@ class Menu:
 
             elif option == Options.EDIT_PRODUCT.value:
                 self.product_manager.confirm_edit()
-            
+
             elif option == Options.LOGOUT.value:
                 print("\n---------------- Logout realizado com sucesso!. ----------------\n")
                 self.authenticated = False
-
-
             else:
                 print("\n---------------- Escolha alguma das opções exibidas ----------------\n")
         return True
