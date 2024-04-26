@@ -1,11 +1,10 @@
 # Autor: Eugenio Lopes Fernandes Lima e Eliatan Almeida
 # Contato: eugeniolopesfernandeslima1997@outlook.com
 # Descrição: Sistema de gerenciamento de produtos
-import time
 
 from validations.product_validations.create_product_validation import ProductValidations
 from product.requirements.product_signup_requirements import ProductSignupRequirements
-from enums.auth_messages import AuthMessages
+
 
 class ProductController:
     """
@@ -16,9 +15,6 @@ class ProductController:
     """
     __CONFIRMATION_YES = 'sim'
     __product_list = []  # Lista para armazenar os produtos
-    MAX_RETRIES = 3
-    retry_count = 0
-    counter = 3
 
     def __init__(self):
         """
