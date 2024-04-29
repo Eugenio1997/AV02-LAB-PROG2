@@ -13,6 +13,7 @@ from user.user_controller import UserController
 from user.authentication import Authentication
 from product.product_controller import ProductController
 from models.product import Product
+from user.user_session import UserSession
 from validations.auth_validations.authenticate_user_validation import AuthenticateUserValidations
 
 
@@ -21,6 +22,8 @@ class Menu:
     retry_count = 0
     email: str
     password: str
+    phone_number: str
+    name: str
     user_exists: bool
     counter: int = 3
 
@@ -32,12 +35,14 @@ class Menu:
         self.auth_validations_manager = AuthenticateUserValidations()
 
     def display(self):
-        product_list = self.product_manager.get_product_list()
+        product_list = self.product_manager.get_product_list_from_user(
+            UserSession.get_authenticated_user_email())
+
         if not self.authenticated:
             print("O que deseja?\n")
             print("Cadastrar-se (1)\nAutenticar-se (2)\nParar execução do programa (3)\n")
         else:
-            print(f'Bem-vindo! Você está autenticado.')
+            print(f'Bem-vindo {UserSession.get_authenticated_user_email()}! Você está autenticado.')
             print("Deseja adicionar um novo produto? (4)")
             print("Deseja listar todos os produtos? (5)")
             if len(product_list) > 0:
@@ -66,19 +71,21 @@ class Menu:
                     self.retry_count += 1
 
                     user_signup_data = self.user_manager.get_user_signup_info()
-                    name, email, phone_number, password = user_signup_data
-                    new_user = User(name, email, phone_number, password)
+                    self.name, self.email, self.phone_number, self.password = user_signup_data
+                    UserSession.set_registered_user(self.email, self.password, self.name, self.phone_number)
+                    new_user = User(self.name, self.email, self.phone_number, self.password)
                     user_dict = new_user.to_dict()
-                    if all([name, email, phone_number, password]):
+                    if all([self.name, self.email, self.phone_number, self.password]):
                         user_saved = self.user_manager.save(user_dict)
                         if user_saved:
                             print(f"\n{UserSignupMessages.SUCCESS.value}\n")
+                            self.product_manager.create_product_list_for_registered_user(UserSession.get_registered_user_email())
                             break
                         else:
                             print(f"\n{UserSignupMessages.EMAIL_IN_USE.value}\n")
                             if self.counter >= 1:
                                 print(f"---------------- Tentativas restantes - ({self.counter}) ---------------- \n")
-                    elif not any([name, email, phone_number, password]):
+                    elif not any([self.name, self.email, self.phone_number, self.password]):
                         print(f"\n{UserSignupMessages.BLANK_FIELDS.value}\n")
                         if self.counter >= 1:
                             print(f"---------------- Tentativas restantes - ({self.counter}) ---------------- \n")
@@ -96,6 +103,7 @@ class Menu:
                     self.counter -= 1
                     self.retry_count += 1
                     self.email, self.password = self.auth_manager.get_user_signin_info()
+                    UserSession.set_authenticated_user(self.email, self.password)
                     self.user_exists: bool = self.auth_validations_manager.validate_user_existence(self.email)
                     if self.user_exists:
                         authenticated = self.auth_manager.authenticate_user(self.email, self.password)
@@ -120,7 +128,8 @@ class Menu:
                 self.check_and_reset_retries_count(option)
 
             elif option == Options.EXIT.value:
-                print("\n---------------- Agradecemos por usar o nosso sistema. ----------------\n")
+                print(
+                    f"\n---------------- Agradecemos por usar o nosso sistema, {UserSession.get_authenticated_user_email()}. ----------------\n")
                 return False
             else:
                 print("\n---------------- Escolha alguma das opções exibidas ----------------\n")
@@ -138,7 +147,8 @@ class Menu:
                     if all([name_validated, price_validated]):
 
                         new_product = Product(name_validated, price_validated)
-                        product_saved = self.product_manager.add_to_inventory(new_product.to_dict())
+                        product_saved = self.product_manager.add_to_inventory(new_product.to_dict(),
+                                                                              UserSession.get_authenticated_user_email())
                         if product_saved:
                             print(f"\n{AddNewProductMessages.SUCCESS.value}\n")
                             break
@@ -155,7 +165,8 @@ class Menu:
                     self.check_and_reset_retries_count()
 
             elif option == Options.LIST_PRODUCTS.value:
-                print(f'Os produtos cadastrados são: {self.product_manager.get_product_list()}\n')
+                print(
+                    f'Os produtos cadastrados são: {self.product_manager.get_product_list_from_user(UserSession.get_authenticated_user_email())}\n')
 
             elif option == Options.DELETE_PRODUCT.value:
                 self.product_manager.confirm_delete()
@@ -166,6 +177,7 @@ class Menu:
             elif option == Options.LOGOUT.value:
                 print("\n---------------- Logout realizado com sucesso!. ----------------\n")
                 self.authenticated = False
+
             else:
                 print("\n---------------- Escolha alguma das opções exibidas ----------------\n")
         return True
