@@ -32,16 +32,17 @@ class UserSignupRequirements:
         f"- Deve conter pelo menos um caractere depois do '@'\n"
         f"- Deve conter um ponto '.' após o '@', seguido por pelo menos dois caracteres\n"
         f"- Não deve conter espaços em branco\n"
-        f"- Pode conter letras maiúsculas, minúsculas, números e os seguintes caracteres especiais: !#$%&'*+-/=?^_`{{|}}~\n\n"
+        f"- Pode conter letras maiúsculas, minúsculas, números e os seguintes caracteres especiais: !#$%&'*+.-/=?^_`{{|}}~\n\n"
         f"Exemplos válidos de endereços de e-mail:\n"
         f"- usuario@example.com\n"
         f"- meu_email123@gmail.com\n"
         f"- contato@site.com.br\n"
+        f"- joão.maria.vicente@site.com.br\n"
     )
 
     name_requirements = (
         f"\nO nome deve conter apenas letras (maiúsculas e minúsculas).\n"
-        f"Deve ter entre 3 e 20 caracteres de comprimento.\n"
+        f"Deve ter entre 3 e 100 caracteres de comprimento.\n"
         f"Deve começar com uma letra (maiúscula ou minúscula).\n"
         f"Se houver mais de uma palavra, elas devem ser separadas por um único espaço.\n"
     )
