@@ -29,7 +29,7 @@ class UserValidations:
         Returns:
             str: O nome validado, se válido.
         """
-        name_pattern = r'^[a-zA-Z]{3,20}(?: [a-zA-Z]{3,20})*$'
+        name_pattern = r'^[a-zA-Z]{3,100}(?: [a-zA-Z]{3,20})*$'
         requirements_message = UserSignupRequirements.name_requirements
         return self.__validate_signup_info(name, name_pattern, requirements_message)
 
