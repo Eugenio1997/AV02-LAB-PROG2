@@ -56,6 +56,10 @@ class Menu:
         if self.retry_count == self.MAX_RETRIES and self.counter == 0:
             if not self.authenticated and option == Options.AUTHENTICATE.value:
                 print(f"{AuthMessages.MAX_RETRIES.value}\n")
+            elif not self.authenticated and option == Options.REGISTER.value:
+                print(f"{UserSignupMessages.MAX_RETRIES.value}\n")
+            elif self.authenticated and option == Options.ADD_NEW_PRODUCT.value:
+                print(f"{AddNewProductMessages.MAX_RETRIES.value}\n")
             self.retry_count = 0
             self.counter = 3
             time.sleep(0.5)
@@ -94,7 +98,7 @@ class Menu:
                         if self.counter >= 1:
                             print(f"---------------- Tentativas restantes - ({self.counter}) ---------------- \n")
 
-                self.check_and_reset_retries_count()
+                self.check_and_reset_retries_count(option)
 
             elif option == Options.AUTHENTICATE.value:
 
@@ -136,8 +140,6 @@ class Menu:
         else:
 
             if option == Options.ADD_NEW_PRODUCT.value:
-                self.counter = 3
-                self.retry_count = 0
                 while self.retry_count < self.MAX_RETRIES:
 
                     self.counter -= 1
@@ -154,6 +156,7 @@ class Menu:
                             break
                     elif not any([name_validated, price_validated]):
                         print(f"\n{AddNewProductMessages.BLANK_FIELDS.value}\n")
+
                         if self.counter >= 1:
                             print(f"---------------- Tentativas restantes - ({self.counter}) ---------------- \n")
 
@@ -162,7 +165,7 @@ class Menu:
                         if self.counter >= 1:
                             print(f"---------------- Tentativas restantes - ({self.counter}) ---------------- \n")
 
-                    self.check_and_reset_retries_count()
+                self.check_and_reset_retries_count(option)
 
             elif option == Options.LIST_PRODUCTS.value:
                 authenticated_user_email = UserSession.get_authenticated_user_email()
