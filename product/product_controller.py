@@ -2,6 +2,7 @@
 # Contato: eugeniolopesfernandeslima1997@outlook.com
 # Descrição: Sistema de gerenciamento de produtos
 from typing import Any, List
+from prettytable import PrettyTable
 
 from models.user import User
 from user.user_session import UserSession
@@ -74,6 +75,8 @@ class ProductController:
         Returns:
             product_list: A lista de produtos de um usuário com base em seu e-mail como chave do dicionario denominado cls.__product_dict
         """
+        table = PrettyTable()
+        table.field_names = ["Nome", "Preço"]
         if user_email in cls.__product_dict:
             product_list = cls.__product_dict[user_email]
             return product_list
@@ -199,3 +202,16 @@ class ProductController:
                 print(f"\n----- A edição do produto {product_name} foi cancelada. -----\n")
         else:
             print(f"\n----- Produto não encontrado. -----\n")
+
+    @classmethod
+    def get_product_list_from_user_in_tabular_format(cls, user_email: str) -> PrettyTable | None:
+
+        table: PrettyTable = PrettyTable()
+        table.field_names = ["Nome", "Preço"]
+        product_list = cls.__product_dict[user_email]
+        [table.add_row([product_dict["name"], product_dict["price"]]) for product_dict in product_list]
+        if not any(table.rows):
+            print(f"\n ----- Nenhum produto encontrado. Por favor, cadastre alguns produtos. -----\n")
+            return None
+
+        return table

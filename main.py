@@ -165,8 +165,10 @@ class Menu:
                     self.check_and_reset_retries_count()
 
             elif option == Options.LIST_PRODUCTS.value:
-                print(
-                    f'Os produtos cadastrados são: {self.product_manager.get_product_list_from_user(UserSession.get_authenticated_user_email())}\n')
+                authenticated_user_email = UserSession.get_authenticated_user_email()
+                product_table = self.product_manager.get_product_list_from_user_in_tabular_format(authenticated_user_email)
+                if product_table is not None:
+                    print(f'\n\nOs produtos cadastrados são:\n\n{product_table}\n\n')
 
             elif option == Options.DELETE_PRODUCT.value:
                 self.product_manager.confirm_delete()
