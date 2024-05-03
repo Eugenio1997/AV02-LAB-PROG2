@@ -8,8 +8,11 @@ O projeto consiste em um sistema de gerenciamento de produtos, onde os usuários
 
 ## Tecnologias Utilizadas
 
-- Python
-- Git
+- Python 3.10.1
+- Git 2.42.0
+- prettytable 3.10.0
+- wcwidth 0.2.13
+
 
 ## Instalação
 
