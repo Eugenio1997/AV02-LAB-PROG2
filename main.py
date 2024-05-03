@@ -8,6 +8,7 @@ from enums.add_new_product_messages import AddNewProductMessages
 from enums.auth_messages import AuthMessages
 from enums.menu_options import Options
 from enums.user_signup_messages import UserSignupMessages
+from interface.user_interface import UserInterface
 from models.user import User
 from user.user_controller import UserController
 from user.authentication import Authentication
@@ -38,18 +39,7 @@ class Menu:
         product_list = self.product_manager.get_product_list_from_user(
             UserSession.get_authenticated_user_email())
 
-        if not self.authenticated:
-            print("O que deseja?\n")
-            print("Cadastrar-se (1)\nAutenticar-se (2)\nParar execução do programa (3)\n")
-        else:
-            print(f'Bem-vindo {UserSession.get_authenticated_user_email()}! Você está autenticado.')
-            print("Deseja adicionar um novo produto? (4)")
-            print("Deseja listar todos os produtos? (5)")
-            if len(product_list) > 0:
-                print("Deseja deletar algum produto? (6)")
-            if len(product_list) > 0:
-                print("Deseja editar algum produto? (7)")
-            print("Deslogar-se (8)\n")
+        UserInterface.display(self.authenticated, product_list)
 
     def check_and_reset_retries_count(self, option: Optional[str] = None):
 
@@ -83,7 +73,8 @@ class Menu:
                         user_saved = self.user_manager.save(user_dict)
                         if user_saved:
                             print(f"\n{UserSignupMessages.SUCCESS.value}\n")
-                            self.product_manager.create_product_list_for_registered_user(UserSession.get_registered_user_email())
+                            self.product_manager.create_product_list_for_registered_user(
+                                UserSession.get_registered_user_email())
                             break
                         else:
                             print(f"\n{UserSignupMessages.EMAIL_IN_USE.value}\n")
@@ -140,6 +131,8 @@ class Menu:
         else:
 
             if option == Options.ADD_NEW_PRODUCT.value:
+                self.counter = 3
+                self.retry_count = 0
                 while self.retry_count < self.MAX_RETRIES:
 
                     self.counter -= 1
@@ -169,7 +162,8 @@ class Menu:
 
             elif option == Options.LIST_PRODUCTS.value:
                 authenticated_user_email = UserSession.get_authenticated_user_email()
-                product_table = self.product_manager.get_product_list_from_user_in_tabular_format(authenticated_user_email)
+                product_table = self.product_manager.get_product_list_from_user_in_tabular_format(
+                    authenticated_user_email)
                 if product_table is not None:
                     print(f'\n\nOs produtos cadastrados são:\n\n{product_table}\n\n')
 
