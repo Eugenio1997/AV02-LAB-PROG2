@@ -15,6 +15,7 @@ from user.authentication import Authentication
 from product.product_controller import ProductController
 from models.product import Product
 from user.user_session import UserSession
+from utils import Utils
 from validations.auth_validations.authenticate_user_validation import AuthenticateUserValidations
 
 
@@ -27,6 +28,7 @@ class Menu:
     name: str
     user_exists: bool
     counter: int = 3
+    product_saved: bool = False
 
     def __init__(self):
         self.authenticated = False
@@ -40,19 +42,6 @@ class Menu:
             UserSession.get_authenticated_user_email())
 
         UserInterface.display(self.authenticated, product_list)
-
-    def check_and_reset_retries_count(self, option: Optional[str] = None):
-
-        if self.retry_count == self.MAX_RETRIES and self.counter == 0:
-            if not self.authenticated and option == Options.AUTHENTICATE.value:
-                print(f"{AuthMessages.MAX_RETRIES.value}\n")
-            elif not self.authenticated and option == Options.REGISTER.value:
-                print(f"{UserSignupMessages.MAX_RETRIES.value}\n")
-            elif self.authenticated and option == Options.ADD_NEW_PRODUCT.value:
-                print(f"{AddNewProductMessages.MAX_RETRIES.value}\n")
-            self.retry_count = 0
-            self.counter = 3
-            time.sleep(0.5)
 
     def handle_option(self, option: str):
         user_saved: bool = False
@@ -89,7 +78,9 @@ class Menu:
                         if self.counter >= 1:
                             print(f"---------------- Tentativas restantes - ({self.counter}) ---------------- \n")
 
-                self.check_and_reset_retries_count(option)
+                self.retry_count, self.counter = Utils.check_and_reset_retries_count(self.retry_count, self.counter,
+                                                                                     self.authenticated, user_saved,
+                                                                                     self.product_saved, option)
 
             elif option == Options.AUTHENTICATE.value:
 
@@ -120,8 +111,9 @@ class Menu:
                         if self.counter >= 1:
                             print(f"---------------- Tentativas restantes - ({self.counter}) ---------------- \n")
 
-                self.check_and_reset_retries_count(option)
-
+                self.retry_count, self.counter = Utils.check_and_reset_retries_count(self.retry_count, self.counter,
+                                                                                     self.authenticated, user_saved,
+                                                                                     self.product_saved, option)
             elif option == Options.EXIT.value:
                 print(
                     f"\n---------------- Agradecemos por usar o nosso sistema, {UserSession.get_authenticated_user_email()}. ----------------\n")
@@ -131,8 +123,7 @@ class Menu:
         else:
 
             if option == Options.ADD_NEW_PRODUCT.value:
-                self.counter = 3
-                self.retry_count = 0
+
                 while self.retry_count < self.MAX_RETRIES:
 
                     self.counter -= 1
@@ -142,9 +133,9 @@ class Menu:
                     if all([name_validated, price_validated]):
 
                         new_product = Product(name_validated, price_validated)
-                        product_saved = self.product_manager.add_to_inventory(new_product.to_dict(),
-                                                                              UserSession.get_authenticated_user_email())
-                        if product_saved:
+                        self.product_saved = self.product_manager.add_to_inventory(new_product.to_dict(),
+                                                                                   UserSession.get_authenticated_user_email())
+                        if self.product_saved:
                             print(f"\n{AddNewProductMessages.SUCCESS.value}\n")
                             break
                     elif not any([name_validated, price_validated]):
@@ -158,7 +149,9 @@ class Menu:
                         if self.counter >= 1:
                             print(f"---------------- Tentativas restantes - ({self.counter}) ---------------- \n")
 
-                self.check_and_reset_retries_count(option)
+                self.retry_count, self.counter = Utils.check_and_reset_retries_count(self.retry_count, self.counter,
+                                                                                     self.authenticated, user_saved,
+                                                                                     self.product_saved, option)
 
             elif option == Options.LIST_PRODUCTS.value:
                 authenticated_user_email = UserSession.get_authenticated_user_email()
